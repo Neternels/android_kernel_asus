@@ -1,7 +1,7 @@
 sudo: required
 language: cpp
 compiler: gcc
-dist: bionic
+dist: focal
 
 before_install:
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157
@@ -9,7 +9,7 @@ before_install:
   - sudo apt-get update -qq
 
 install: 
-  - sudo apt-get install -qq g++-10
+  - sudo apt-get install -qq g++-11
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 90
 
 script: 
