@@ -841,6 +841,7 @@ static struct clk_freq_tbl ftbl_gcc_oxili_gfx3d_clk[] = {
 	F( 400000000,      gpll0_out_main,   2,	  0,	0),
 	F( 465000000,      gpll2_gfx3d,   2,    0,    0),
 	F( 550000000,      gpll3_out_main,   2,    0,    0),
+	F( 650000000,      gpll3_out_main,   2,    0,    0),
 	F_END
 };
 
@@ -854,7 +855,7 @@ static struct rcg_clk gfx3d_clk_src = {
 		.dbg_name = "gfx3d_clk_src",
 		.ops = &clk_ops_rcg,
 		VDD_DIG_FMAX_MAP4(LOW, 220000000, NOMINAL, 400000000, NOMINAL_PLUS, 465000000, HIGH,
-			550000000),
+			650000000),
 		CLK_INIT(gfx3d_clk_src.c),
 	},
 };
@@ -1149,6 +1150,7 @@ static struct clk_freq_tbl ftbl_gcc_camss_jpeg0_clk[] = {
 	F( 133330000,	   gpll0_out_main,   6,	  0,	0),
 	F( 266670000,	   gpll0_out_main,   3,	  0,	0),
 	F( 320000000,	   gpll0_out_main, 2.5,	  0,	0),
+	F( 400000000,	   gpll0_out_main,   2,	  0,	0),
 	F_END
 };
 
@@ -1162,7 +1164,7 @@ static struct rcg_clk jpeg0_clk_src = {
 		.dbg_name = "jpeg0_clk_src",
 		.ops = &clk_ops_rcg,
 		VDD_DIG_FMAX_MAP3(LOW, 133330000, NOMINAL, 266670000, HIGH,
-			320000000),
+			400000000),
 		CLK_INIT(jpeg0_clk_src.c),
 	},
 };
