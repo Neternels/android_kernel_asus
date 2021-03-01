@@ -39,6 +39,8 @@ enum {
 	MIGRATE_UNMOVABLE,
 	MIGRATE_RECLAIMABLE,
 	MIGRATE_MOVABLE,
+	MIGRATE_PCPTYPES,	/* the number of types on the pcp lists */
+	MIGRATE_RESERVE = MIGRATE_PCPTYPES,
 #ifdef CONFIG_CMA
 	/*
 	 * MIGRATE_CMA migration type is designed to mimic the way
@@ -55,10 +57,8 @@ enum {
 	 */
 	MIGRATE_CMA,
 #endif
-	MIGRATE_PCPTYPES, /* the number of types on the pcp lists */
-	MIGRATE_RESERVE = MIGRATE_PCPTYPES,
 #ifdef CONFIG_MEMORY_ISOLATION
-	MIGRATE_ISOLATE  ,	/* can't allocate from here */
+	MIGRATE_ISOLATE,	/* can't allocate from here */
 #endif
 	MIGRATE_TYPES
 };
@@ -74,11 +74,9 @@ extern int *get_migratetype_fallbacks(int mtype);
 #ifdef CONFIG_CMA
 bool is_cma_pageblock(struct page *page);
 #  define is_migrate_cma(migratetype) unlikely((migratetype) == MIGRATE_CMA)
-#  define get_cma_migrate_type() MIGRATE_CMA
 #else
 #  define is_cma_pageblock(page) false
 #  define is_migrate_cma(migratetype) false
-#  define get_cma_migrate_type() MIGRATE_MOVABLE
 #endif
 
 #define for_each_migratetype_order(order, type) \
@@ -156,6 +154,9 @@ enum zone_stat_item {
 	NR_ANON_TRANSPARENT_HUGEPAGES,
 	NR_FREE_CMA_PAGES,
 	NR_SWAPCACHE,
+#ifdef CONFIG_UKSM
+	NR_UKSM_ZERO_PAGES,
+#endif
 	NR_VM_ZONE_STAT_ITEMS };
 
 /*
@@ -897,7 +898,7 @@ static inline int is_normal_idx(enum zone_type idx)
 }
 
 /**
- * is_highmem - helper function to quickly check if a struct zone is a 
+ * is_highmem - helper function to quickly check if a struct zone is a
  *              highmem zone or not.  This is an attempt to keep references
  *              to ZONE_{DMA/NORMAL/HIGHMEM/etc} in general code to a minimum.
  * @zone - pointer to struct zone variable
@@ -1126,14 +1127,8 @@ static inline unsigned long early_pfn_to_nid(unsigned long pfn)
 #error Allocator MAX_ORDER exceeds SECTION_SIZE
 #endif
 
-static inline unsigned long pfn_to_section_nr(unsigned long pfn)
-{
-	return pfn >> PFN_SECTION_SHIFT;
-}
-static inline unsigned long section_nr_to_pfn(unsigned long sec)
-{
-	return sec << PFN_SECTION_SHIFT;
-}
+#define pfn_to_section_nr(pfn) ((pfn) >> PFN_SECTION_SHIFT)
+#define section_nr_to_pfn(sec) ((sec) << PFN_SECTION_SHIFT)
 
 #define SECTION_ALIGN_UP(pfn)	(((pfn) + PAGES_PER_SECTION - 1) & PAGE_SECTION_MASK)
 #define SECTION_ALIGN_DOWN(pfn)	((pfn) & PAGE_SECTION_MASK)
