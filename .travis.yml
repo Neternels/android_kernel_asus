@@ -26,10 +26,10 @@ script:
   - sudo bash ./Z00L.sh
   - sudo bash ./Z00LQ.sh
 
-#after_success:
-#  - export UPLOADTOOL_SUFFIX=Yata-no-Kagami
- # - export UPLOADTOOL_BODY="Custom Kernel for Z00T Devices Without CC Stack Protector"
- # - sudo bash upload.sh $TRAVIS_BUILD_DIR/msm8916/*.zip
+after_success:
+  - export UPLOADTOOL_SUFFIX=Yata-no-Kagami
+  - export UPLOADTOOL_BODY="Custom Kernel for Z00T/Z00L Devices Without CC Stack Protector"
+  - sudo bash upload.sh $TRAVIS_BUILD_DIR/msm8916/*.zip
 
 branches:
   except:
