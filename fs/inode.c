@@ -164,6 +164,7 @@ int inode_init_always(struct super_block *sb, struct inode *inode)
 	mapping->a_ops = &empty_aops;
 	mapping->host = inode;
 	mapping->flags = 0;
+	atomic_set(&mapping->i_mmap_writable, 0);
 	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
 	mapping->private_data = NULL;
 	mapping->backing_dev_info = &default_backing_dev_info;
@@ -887,11 +888,7 @@ unsigned int get_next_ino(void)
 	}
 #endif
 
-	res++;
-	/* get_next_ino should not provide a 0 inode number */
-	if (unlikely(!res))
-		res++;
-	*p = res;
+	*p = ++res;
 	put_cpu_var(last_ino);
 	return res;
 }
