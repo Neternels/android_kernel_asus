@@ -154,7 +154,6 @@ enum zone_stat_item {
 	NUMA_OTHER,		/* allocation from other node */
 #endif
 	NR_ANON_TRANSPARENT_HUGEPAGES,
-	NR_SWAPCACHE,
 	NR_FREE_CMA_PAGES,
 	NR_SWAPCACHE,
 #ifdef CONFIG_UKSM
