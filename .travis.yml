@@ -28,7 +28,7 @@ script:
 
 after_success:
   - export UPLOADTOOL_SUFFIX=Yata-no-Kagami
-  - export UPLOADTOOL_BODY="Custom Kernel for Z00T/Z00L Devices Without CC Stack Protector"
+  - export UPLOADTOOL_BODY="Custom Kernel for Z00T and Z00L Devices Without CC Stack Protector"
   - sudo bash upload.sh $TRAVIS_BUILD_DIR/msm8916/*.zip
 
 branches:
