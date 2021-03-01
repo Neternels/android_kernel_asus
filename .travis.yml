@@ -19,10 +19,12 @@ script:
   - chmod +x ./Z00T.sh
   - chmod +x ./Z00TQ.sh
   - chmod +x ./Z00L.sh
+  - chmod +x ./Z00LQ.sh
   - sudo bash ./gcc-fix.sh
   - sudo bash ./Z00T.sh
   - sudo bash ./Z00TQ.sh
-#  - sudo bash ./Z00L.sh
+  - sudo bash ./Z00L.sh
+  - sudo bash ./Z00LQ.sh
 
 after_success:
   - export UPLOADTOOL_SUFFIX=Yata-no-Kagami
