@@ -17,9 +17,11 @@ script:
   - chmod +x ./gcc-fix.sh
 #  - sudo ln -s ./include/dt-bindings dt-bindings
   - chmod +x ./Z00T.sh
+  - chmod +x ./Z00TQ.sh
   - chmod +x ./Z00L.sh
   - sudo bash ./gcc-fix.sh
   - sudo bash ./Z00T.sh
+  - sudo bash ./Z00TQ.sh
 #  - sudo bash ./Z00L.sh
 
 after_success:
