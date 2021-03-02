@@ -8,7 +8,7 @@ red='\033[0;31m';
 nocol='\033[0m';
 
 # Kernel details;
-KERNEL_NAME="ICEY-SC";
+KERNEL_NAME="ICEY-Q";
 VERSION="1.0.2a";
 DATE=$(date +"%d-%m-%Y-%I-%M");
 DEVICE="Z00L-Q";
