@@ -27,7 +27,7 @@ script:
   - sudo bash ./Z00LQ.sh
 
 after_success:
-  - export UPLOADTOOL_SUFFIX=QZ
+  - export UPLOADTOOL_SUFFIX=QZL
   - export UPLOADTOOL_BODY="Custom Q Kernel for Z00T and Z00L Devices Without CC Stack Protector"
   - sudo bash upload.sh $TRAVIS_BUILD_DIR/msm8916/*.zip
 
