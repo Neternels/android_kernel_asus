@@ -18,17 +18,17 @@ script:
 #  - sudo ln -s ./include/dt-bindings dt-bindings
   - chmod +x ./Z00T.sh
   - chmod +x ./Z00TQ.sh
-  - chmod +x ./Z00L.sh
-  - chmod +x ./Z00LQ.sh
+  #- chmod +x ./Z00L.sh
+  #- chmod +x ./Z00LQ.sh
   - sudo bash ./gcc-fix.sh
   #- sudo bash ./Z00T.sh
   - sudo bash ./Z00TQ.sh
   #- sudo bash ./Z00L.sh
-  - sudo bash ./Z00LQ.sh
+  #- sudo bash ./Z00LQ.sh
 
 after_success:
-  - export UPLOADTOOL_SUFFIX=QZL2
-  - export UPLOADTOOL_BODY="Custom Kernel for Z00T and Z00L Devices Without CC Stack Protector"
+  - export UPLOADTOOL_SUFFIX=Yata-no-Kagami
+  - export UPLOADTOOL_BODY="Special Builds with downclocked little cores for Z00T"
   - sudo bash upload.sh $TRAVIS_BUILD_DIR/msm8916/*.zip
 
 branches:
