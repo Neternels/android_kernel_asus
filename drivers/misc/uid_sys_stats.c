@@ -179,8 +179,7 @@ static ssize_t uid_remove_write(struct file *file,
 	struct hlist_node *tmp;
 	char uids[128];
 	char *start_uid, *end_uid = NULL;
-	long int start = 0, end = 0;
-	uid_t uid_start, uid_end;
+	long int uid_start = 0, uid_end = 0;
 
 	if (count >= sizeof(uids))
 		count = sizeof(uids) - 1;
@@ -195,39 +194,23 @@ static ssize_t uid_remove_write(struct file *file,
 	if (!start_uid || !end_uid)
 		return -EINVAL;
 
-	if (kstrtol(start_uid, 10, &start) != 0 ||
-		kstrtol(end_uid, 10, &end) != 0) {
+	if (kstrtol(start_uid, 10, &uid_start) != 0 ||
+		kstrtol(end_uid, 10, &uid_end) != 0) {
 		return -EINVAL;
 	}
-
-#define UID_T_MAX (((uid_t)~0U)-1)
-	if ((start < 0) || (end < 0) ||
-		(start > UID_T_MAX) || (end > UID_T_MAX)) {
-		return -EINVAL;
-	}
-
-	uid_start = start;
-	uid_end = end;
-
-	/* TODO need to unify uid_sys_stats interface with uid_time_in_state.
-	 * Here we are reusing remove_uid_range to reduce the number of
-	 * sys calls made by userspace clients, remove_uid_range removes uids
-	 * from both here as well as from cpufreq uid_time_in_state
-	 */
-	cpufreq_task_stats_remove_uids(uid_start, uid_end);
-
 	rt_mutex_lock(&uid_lock);
 
 	for (; uid_start <= uid_end; uid_start++) {
 		hash_for_each_possible_safe(hash_table, uid_entry, tmp,
-							hash, uid_start) {
-			hash_del(&uid_entry->hash);
-			kfree(uid_entry);
+							hash, (uid_t)uid_start) {
+			if(uid_start == uid_entry->uid) {
+				hash_del(&uid_entry->hash);
+				kfree(uid_entry);
+			}
 		}
 	}
 
 	rt_mutex_unlock(&uid_lock);
-
 	return count;
 }
 
@@ -262,13 +245,29 @@ static void compute_uid_io_bucket_stats(struct io_stats *io_bucket,
 					struct io_stats *io_last,
 					struct io_stats *io_dead)
 {
-	io_bucket->read_bytes += io_curr->read_bytes + io_dead->read_bytes -
+	s64 delta;
+
+	delta = io_curr->read_bytes + io_dead->read_bytes -
 		io_last->read_bytes;
-	io_bucket->write_bytes += io_curr->write_bytes + io_dead->write_bytes -
+	if (delta > 0)
+		io_bucket->read_bytes += delta;
+
+	delta = io_curr->write_bytes + io_dead->write_bytes -
 		io_last->write_bytes;
-	io_bucket->rchar += io_curr->rchar + io_dead->rchar - io_last->rchar;
-	io_bucket->wchar += io_curr->wchar + io_dead->wchar - io_last->wchar;
-	io_bucket->fsync += io_curr->fsync + io_dead->fsync - io_last->fsync;
+	if (delta > 0)
+		io_bucket->write_bytes += delta;
+
+	delta = io_curr->rchar + io_dead->rchar - io_last->rchar;
+	if (delta > 0)
+		io_bucket->rchar += delta;
+
+	delta = io_curr->wchar + io_dead->wchar - io_last->wchar;
+	if (delta > 0)
+		io_bucket->wchar += delta;
+
+	delta = io_curr->fsync + io_dead->fsync - io_last->fsync;
+	if (delta > 0)
+		io_bucket->fsync += delta;
 
 	io_last->read_bytes = io_curr->read_bytes;
 	io_last->write_bytes = io_curr->write_bytes;
