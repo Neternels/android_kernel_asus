@@ -9,7 +9,7 @@ nocol='\033[0m';
 
 # Kernel details;
 KERNEL_NAME="ICEY-QZ";
-VERSION="1.0.3";
+VERSION="1.3d";
 DATE=$(date +"%d-%m-%Y-%I-%M");
 DEVICE="Z00T-Q";
 OUT="msm8916";
